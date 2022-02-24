@@ -40,7 +40,9 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request.headers;
+  const userTodos = (users.find(user => user.username == username)).todos;
+  return response.status(200).send(userTodos);
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
