@@ -86,7 +86,20 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  
+  const { username } = request.headers;
+  const { id } = request.params;
+
+  const user = users.find(user => user.username == username);
+  const todo = user.todos.find(todo => todo.id == id);
+
+  if (!todo) {
+    return response.status(404).send({ error: 'To Do does not exist'});
+  }
+
+  todo.done = true;
+
+  response.status(200).send(todo);
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
