@@ -103,7 +103,20 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+
+  const { username } = request.headers;
+  const { id } = request.params;
+
+  const user = users.find(user => user.username == username);
+  const todo = user.todos.find(todo => todo.id == id);
+
+  if (!todo) {
+    return response.status(404).send({ error: 'To Do does not exist'});
+  }
+
+  user.todos.splice(user.todos.indexOf(todo), 1);
+
+  return response.status(204).send();
 });
 
 module.exports = app;
